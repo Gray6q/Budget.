@@ -46,9 +46,14 @@ function renderChart(all) {
 
 function renderCategories(current, summary) {
   const container = getContainer('categories');
+  const totals = getCategoryTotals(current);
   container.innerHTML = '';
 
-  getCategoryTotals(current).forEach(function (category) {
+  if (totals.length === 0) {
+    container.append(createElement('p', 'categories__empty', 'Nu ai cheltuieli în această lună.'));
+  }
+
+  totals.forEach(function (category) {
     const percent = summary.expense > 0 ? Math.round(category.total / summary.expense * 100) : 0;
     const item = createElement('div', 'category');
     const row = createElement('div', 'category__row');
@@ -77,6 +82,10 @@ function renderTransactions(current) {
     .slice(0, RECENT_COUNT);
 
   container.innerHTML = '';
+
+  if (latest.length === 0) {
+    container.append(createElement('p', 'transactions__empty', 'Nu ai tranzacții în această lună.'));
+  }
 
   latest.forEach(function (transaction) {
     container.append(createTransactionRow(transaction));

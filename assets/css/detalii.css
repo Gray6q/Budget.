@@ -457,3 +457,9 @@ p {
     font-size: 32px;
   }
 }
+
+.categories__empty,
+.transactions__empty {
+  padding: 8px 0 16px;
+  color: #A9B1C3;
+}

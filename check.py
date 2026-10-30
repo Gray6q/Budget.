@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Verifică proiectul: fișiere, linkuri, legături HTML-JS, clase BEM, logică, randare."""
-import os, re, shutil, socket, subprocess, sys, tempfile, time
+import os, re, shutil, socket, subprocess, sys, tempfile, time, datetime
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 os.chdir(ROOT)
@@ -202,30 +202,36 @@ function check(name, actual, expected) {
 const now = new Date();
 const year = now.getFullYear();
 const month = now.getMonth();
+const lastMonth = new Date(year, month - 1, 1);
+check('pornește gol', loadTransactions().length, 0);
+check('fără date, procentul e 0', getSummary([]).spentPercent, 0);
+addTransaction({ type: 'income', title: 'Salariu', category: 'Venit', amount: 8000, date: todayString() });
+addTransaction({ type: 'expense', title: 'Supermarket', category: 'Alimente', amount: 342.5, date: todayString() });
+addTransaction({ type: 'expense', title: 'Benzină', category: 'Transport', amount: 400, date: todayString() });
 const all = loadTransactions();
 const current = getMonthTransactions(all, year, month);
 const sum = getSummary(current);
-check('venituri luna curentă', sum.income, 9500);
-check('cheltuieli luna curentă', sum.expense, 5220);
-check('sold', sum.balance, 4280);
-check('procent cheltuit', sum.spentPercent, 55);
-check('ID-uri unice', new Set(all.map(function (t) { return t.id; })).size, all.length);
+check('3 tranzacții salvate', all.length, 3);
+check('ID-uri unice', new Set(all.map(function (t) { return t.id; })).size, 3);
+check('venituri', sum.income, 8000);
+check('cheltuieli', sum.expense, 742.5);
+check('sold', sum.balance, 7257.5);
+check('procent cheltuit', sum.spentPercent, 9);
+check('luna trecută e goală', getMonthTransactions(all, lastMonth.getFullYear(), lastMonth.getMonth()).length, 0);
 check('format 4280', formatMoney(4280), '4\u00A0280');
 check('format 1500.5', formatMoney(1500.5), '1\u00A0500,50');
 check('format 0', formatMoney(0), '0');
-check('fără venituri, procentul e 0', getSummary([]).spentPercent, 0);
 const series = getMonthlySeries(all, 6);
 check('grafic: 6 luni', series.length, 6);
-check('grafic: ultima lună = cheltuielile curente', series[5].expense, 5220);
+check('grafic: ultima lună = cheltuielile curente', series[5].expense, 742.5);
+check('grafic: prima lună e goală', series[0].expense, 0);
 const cats = getCategoryTotals(current);
-check('categorii: suma = cheltuieli', cats.reduce(function (a, c) { return a + c.total; }, 0), 5220);
+check('categorii: suma = cheltuieli', cats.reduce(function (a, c) { return a + c.total; }, 0), 742.5);
 check('categorii: sortate descrescător', cats.every(function (c, i) { return i === 0 || cats[i - 1].total >= c.total; }), true);
-addTransaction({ type: 'expense', title: 'Test', category: 'Alimente', amount: 100.5, date: todayString() });
-check('după adăugare: cheltuieli', getSummary(getMonthTransactions(loadTransactions(), year, month)).expense, 5320.5);
-const added = loadTransactions().find(function (t) { return t.title === 'Test'; });
-removeTransaction(added.id);
-check('după ștergere: cheltuieli', getSummary(getMonthTransactions(loadTransactions(), year, month)).expense, 5220);
-check('salvat în localStorage', JSON.parse(__store[STORAGE_KEY]).length, all.length);
+check('salvat în localStorage', JSON.parse(__store[STORAGE_KEY]).length, 3);
+removeTransaction(all.find(function (t) { return t.title === 'Benzină'; }).id);
+check('după ștergere: cheltuieli', getSummary(getMonthTransactions(loadTransactions(), year, month)).expense, 342.5);
+check('după ștergere: 2 tranzacții', loadTransactions().length, 2);
 process.exit(__failed ? 1 : 0);
 """
     if os.path.isfile('assets/js/data.js'):
@@ -268,32 +274,36 @@ else:
     def expect(label, condition):
         ok(label) if condition else bad(label)
 
+    luni = ['Ianuarie', 'Februarie', 'Martie', 'Aprilie', 'Mai', 'Iunie', 'Iulie', 'August',
+            'Septembrie', 'Octombrie', 'Noiembrie', 'Decembrie']
+    azi = datetime.date.today()
+    eticheta = luni[azi.month - 1] + ' ' + str(azi.year)
+
     try:
         dom = dump('index.html')
         if not dom.strip():
             bad('index.html nu s-a putut încărca')
         else:
-            expect('Acasă: sold 4 280', '4 280' in dom)
-            expect('Acasă: venituri + 9 500 MDL', '+ 9 500 MDL' in dom)
-            expect('Acasă: cheltuieli − 5 220 MDL', '− 5 220 MDL' in dom)
-            expect('Acasă: 55%', '55%' in dom)
-            expect('Acasă: inelul a fost calculat de JS', '414.7 339.3' not in dom)
+            expect('Acasă: luna curentă (' + eticheta + ')', eticheta in dom)
+            expect('Acasă: venituri + 0 MDL (fără date)', '+ 0 MDL' in dom)
+            expect('Acasă: cheltuieli − 0 MDL', '− 0 MDL' in dom)
+            expect('Acasă: procent 0%', '>0%<' in dom)
 
         dom = dump('pages/detalii.html')
         if not dom.strip():
             bad('pages/detalii.html nu s-a putut încărca')
         else:
+            expect('Detalii: luna curentă', eticheta in dom)
             expect('Detalii: 12 bare în grafic', dom.count('chart__bar chart__bar--') == 12)
-            expect('Detalii: 5 categorii', dom.count('class="category__row"') == 5)
-            expect('Detalii: 5 tranzacții recente', dom.count('class="transaction"') == 5)
-            expect('Detalii: nota cu luna trecută', bool(re.search(r'mai (mult|puțin) decât luna trecută', dom)))
+            expect('Detalii: mesaj gol la categorii', 'categories__empty' in dom)
+            expect('Detalii: mesaj gol la tranzacții', 'transactions__empty' in dom)
 
         dom = dump('pages/tranzactii.html')
         if not dom.strip():
             bad('pages/tranzactii.html nu s-a putut încărca')
         else:
-            expect('Tranzacții: 15 rânduri în listă', dom.count('class="transaction"') == 15)
-            expect('Tranzacții: 15 butoane de ștergere', dom.count('class="transaction__delete"') == 15)
+            expect('Tranzacții: luna curentă', eticheta in dom)
+            expect('Tranzacții: mesaj listă goală', 'workspace__empty' in dom)
             expect('Tranzacții: 5 categorii în formular', dom.count('<option') == 5)
     finally:
         server.terminate()

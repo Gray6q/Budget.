@@ -1,40 +1,11 @@
 /* ===== Date și calcule comune ===== */
 
-const STORAGE_KEY = 'budget.transactions.v2';
+const STORAGE_KEY = 'budget.transactions.v3';
 
 const MONTHS = [
   'Ianuarie', 'Februarie', 'Martie', 'Aprilie', 'Mai', 'Iunie',
   'Iulie', 'August', 'Septembrie', 'Octombrie', 'Noiembrie', 'Decembrie'
 ];
-
-/* Tranzacții de test, în luna curentă. Le înlocuim cu cele reale mai târziu. */
-function createSeedTransactions() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-
-  function day(number) {
-    return year + '-' + month + '-' + String(number).padStart(2, '0');
-  }
-
-  return [
-    { id: 1, date: day(28), title: 'Salariu', category: 'Venit', type: 'income', amount: 8000 },
-    { id: 2, date: day(27), title: 'Supermarket', category: 'Alimente', type: 'expense', amount: 342 },
-    { id: 3, date: day(25), title: 'Energie electrică', category: 'Facturi', type: 'expense', amount: 480 },
-    { id: 4, date: day(23), title: 'Benzină', category: 'Transport', type: 'expense', amount: 400 },
-    { id: 5, date: day(21), title: 'Cinema și cină', category: 'Timp liber', type: 'expense', amount: 400 },
-    { id: 6, date: day(20), title: 'Proiect client', category: 'Venit', type: 'income', amount: 1500 },
-    { id: 7, date: day(18), title: 'Piață', category: 'Alimente', type: 'expense', amount: 508 },
-    { id: 8, date: day(15), title: 'Internet și telefon', category: 'Facturi', type: 'expense', amount: 520 },
-    { id: 9, date: day(14), title: 'Cadouri', category: 'Altele', type: 'expense', amount: 430 },
-    { id: 10, date: day(12), title: 'Taxi', category: 'Transport', type: 'expense', amount: 250 },
-    { id: 11, date: day(10), title: 'Reparații', category: 'Altele', type: 'expense', amount: 500 },
-    { id: 12, date: day(9), title: 'Concert', category: 'Timp liber', type: 'expense', amount: 240 },
-    { id: 13, date: day(6), title: 'Supermarket', category: 'Alimente', type: 'expense', amount: 600 },
-    { id: 14, date: day(5), title: 'Abonament transport', category: 'Transport', type: 'expense', amount: 170 },
-    { id: 15, date: day(3), title: 'Apă și gaz', category: 'Facturi', type: 'expense', amount: 380 }
-  ];
-}
 
 /* ----- Salvare și citire ----- */
 
@@ -45,13 +16,15 @@ function saveTransactions(list) {
 function loadTransactions() {
   const saved = localStorage.getItem(STORAGE_KEY);
 
-  if (saved) {
-    return JSON.parse(saved);
+  if (!saved) {
+    return [];
   }
 
-  const seed = createSeedTransactions().concat(createHistorySeed());
-  saveTransactions(seed);
-  return seed;
+  try {
+    return JSON.parse(saved);
+  } catch (error) {
+    return [];
+  }
 }
 
 /* ----- Calcule ----- */
@@ -116,28 +89,6 @@ function setText(name, text) {
 /* ===== Adăugiri pentru pagina Detalii ===== */
 
 const MONTHS_SHORT = ['Ian', 'Feb', 'Mar', 'Apr', 'Mai', 'Iun', 'Iul', 'Aug', 'Sep', 'Oct', 'Noi', 'Dec'];
-
-/* Istoric de test: ultimele 5 luni, ca să existe ce arăta în grafic. */
-function createHistorySeed() {
-  const now = new Date();
-  const incomes = [9200, 9500, 9000, 9700, 9400];
-  const expenses = [5600, 6100, 5200, 6400, 5700];
-  const list = [];
-
-  for (let offset = 1; offset <= 5; offset++) {
-    const date = new Date(now.getFullYear(), now.getMonth() - offset, 1);
-    const prefix = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0');
-    const total = expenses[offset - 1];
-    const base = 100 + offset * 10;
-
-    list.push({ id: base + 1, date: prefix + '-05', title: 'Salariu', category: 'Venit', type: 'income', amount: incomes[offset - 1] });
-    list.push({ id: base + 2, date: prefix + '-12', title: 'Cheltuieli lunare', category: 'Alimente', type: 'expense', amount: Math.round(total * 0.45) });
-    list.push({ id: base + 3, date: prefix + '-18', title: 'Cheltuieli lunare', category: 'Facturi', type: 'expense', amount: Math.round(total * 0.35) });
-    list.push({ id: base + 4, date: prefix + '-24', title: 'Cheltuieli lunare', category: 'Transport', type: 'expense', amount: Math.round(total * 0.2) });
-  }
-
-  return list;
-}
 
 /* Ultimele "count" luni, de la cea mai veche la cea curentă */
 function getMonthlySeries(list, count) {
