@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buget – Detalii</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/detalii.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header__inner">
+      <a class="header__logo" href="../index.html">Buget<span class="header__dot">.</span></a>
+      <nav class="nav">
+        <a class="nav__link" href="../index.html">Acasă</a>
+        <a class="nav__link nav__link--active" href="detalii.html">Detalii</a>
+        <a class="nav__link" href="tranzactii.html">Tranzacții</a>
+        <a class="nav__link" href="detalii.html">Categorii</a>
+      </nav>
+      <a class="button button--small" href="tranzactii.html#adauga">+ Adaugă tranzacție</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-head">
+      <div>
+        <h1 class="page-head__title" data-js="month">Octombrie 2026</h1>
+        <p class="page-head__text">Toate detaliile despre banii tăi luna aceasta.</p>
+      </div>
+      <div class="segmented">
+        <a class="segmented__item segmented__item--active" href="#">Luna</a>
+        <a class="segmented__item" href="#">Anul</a>
+      </div>
+    </div>
+
+    <section class="row">
+      <div class="row__item card card--accent">
+        <div class="card__label card__label--on-accent">Sold curent</div>
+        <div class="card__value" data-js="balance">4 280 MDL</div>
+        <div class="card__note card__note--on-accent" data-js="balance-note">Cu 620 MDL mai mult decât luna trecută</div>
+      </div>
+      <div class="row__item card">
+        <div class="card__label">Venituri</div>
+        <div class="card__value card__value--income" data-js="income">+ 9 500 MDL</div>
+        <div class="card__note" data-js="income-note">2 surse de venit</div>
+      </div>
+      <div class="row__item card">
+        <div class="card__label">Cheltuieli</div>
+        <div class="card__value card__value--expense" data-js="expense">− 5 220 MDL</div>
+        <div class="card__note" data-js="expense-note">55% din venituri</div>
+      </div>
+    </section>
+
+    <section class="row">
+      <div class="row__item row__item--wide card chart">
+        <div class="chart__head">
+          <h2 class="chart__title">Venituri și cheltuieli</h2>
+          <div class="legend">
+            <span><span class="legend__dot legend__dot--income"></span>Venituri</span>
+            <span><span class="legend__dot legend__dot--expense"></span>Cheltuieli</span>
+          </div>
+        </div>
+        <div class="chart__bars" data-js="chart-bars"></div>
+        <div class="chart__months" data-js="chart-months"></div>
+      </div>
+
+      <div class="row__item card categories">
+        <h2 class="categories__title">Pe categorii</h2>
+        <div data-js="categories"></div>
+        <p class="categories__note">Barele arată ponderea fiecărei categorii din cheltuieli.</p>
+      </div>
+    </section>
+
+    <section class="card transactions" id="tranzactii">
+      <div class="transactions__head">
+        <h2 class="transactions__title">Tranzacții recente</h2>
+        <a class="transactions__link" href="tranzactii.html">Vezi toate →</a>
+      </div>
+      <div data-js="transactions"></div>
+    </section>
+  </main>
+
+  <footer class="container footer">Sumele sunt doar exemple.</footer>
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/detalii.js"></script>
+</body>
+</html>

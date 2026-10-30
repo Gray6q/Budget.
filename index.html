@@ -1,137 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ro">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2314120f'/%3E%3Ctext x='16' y='23' font-size='20' font-weight='700' text-anchor='middle' fill='%23c9974a' font-family='sans-serif'%3EB%3C/text%3E%3C/svg%3E">
-  <meta name="description" content="Classic barbershop in Chisinau. Haircuts, beard trims and straight-razor shaves. Book online.">
-  <title>Your Barbershop – Chisinau</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buget – Acasă</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body class="page">
-
-  <div class="page__stripe"></div>
-
+<body>
   <header class="header">
-    <div class="header__inner">
-      <a class="header__logo" href="index.html">Your <span class="header__logo-accent">Barbershop</span></a>
-      <button class="header__toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
-        <span class="header__toggle-bar"></span>
-        <span class="header__toggle-bar"></span>
-        <span class="header__toggle-bar"></span>
-      </button>
-      <nav class="header__nav" id="menu">
-        <a class="header__link" href="index.html#services">Services</a>
-        <a class="header__link" href="index.html#why-us">Why us</a>
-        <a class="header__link" href="index.html#hours">Hours</a>
-        <a class="header__link" href="index.html#contact">Contact</a>
-        <a class="header__link" href="pages/login.html">Log in</a>
-        <a class="btn btn--primary header__button" href="pages/booking.html">Book now</a>
+    <div class="container header__inner">
+      <a class="header__logo" href="index.html">Buget<span class="header__dot">.</span></a>
+      <nav class="nav">
+        <a class="nav__link nav__link--active" href="index.html">Acasă</a>
+        <a class="nav__link" href="pages/detalii.html">Detalii</a>
+        <a class="nav__link" href="pages/tranzactii.html">Tranzacții</a>
+        <a class="nav__link" href="pages/detalii.html">Categorii</a>
       </nav>
     </div>
   </header>
 
-  <main>
-    <section class="hero">
-      <div class="hero__inner">
-        <div class="hero__content">
-          <p class="status" data-status>Checking opening hours...</p>
-          <p class="hero__eyebrow">Classic barbershop · Chisinau</p>
-          <h1 class="hero__title">A haircut that holds its shape.</h1>
-          <p class="hero__text">Haircuts, beard trims and straight-razor shaves in a calm atmosphere. You pick the time, we take care of the rest.</p>
-          <div class="hero__actions">
-            <a class="btn btn--primary hero__button" href="booking.html">Book now</a>
-            <a class="btn btn--outline hero__button" href="#services">See services</a>
-          </div>
-        </div>
-        <div class="hero__photo">[SHOP PHOTO]</div>
-      </div>
-    </section>
+  <main class="overview">
+    <h1 class="visually-hidden">Prezentare generală</h1>
+    <span class="chip" data-js="month">Octombrie 2026</span>
 
-    <section class="section section--alt" id="services">
-      <div class="section__inner">
-        <h2 class="section__title">Services</h2>
-        <div class="price-list" id="price-list"></div>
-        <p class="services__note">Prices are in MDL. Duration is approximate.</p>
+    <div class="ring">
+      <svg class="ring__svg" data-js="ring" viewBox="0 0 300 300" role="img" aria-label="55% din venituri cheltuit">
+        <circle class="ring__track" cx="150" cy="150" r="120"/>
+        <circle class="ring__value" data-js="ring-value" cx="150" cy="150" r="120" stroke-dasharray="414.7 339.3"/>
+      </svg>
+      <div class="ring__center">
+        <span class="ring__label">Sold curent</span>
+        <span class="ring__amount" data-js="balance">4 280</span>
+        <span class="ring__currency">MDL</span>
       </div>
-    </section>
-
-    <section class="section" id="why-us">
-      <div class="section__inner">
-        <h2 class="section__title">Why us</h2>
-        <div class="features__grid">
-          <div class="feature">
-            <p class="feature__number">01</p>
-            <h3 class="feature__title">Booked at a fixed time</h3>
-            <p class="feature__text">Come at your time, no waiting in line.</p>
-          </div>
-          <div class="feature">
-            <p class="feature__number">02</p>
-            <h3 class="feature__title">Attention to detail</h3>
-            <p class="feature__text">Every cut is planned around your face shape and your style.</p>
-          </div>
-          <div class="feature">
-            <p class="feature__number">03</p>
-            <h3 class="feature__title">Relaxed atmosphere</h3>
-            <p class="feature__text">A place where you sit back in the chair and slow down for an hour.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section--alt" id="hours">
-      <div class="section__inner contact__grid">
-        <div class="hours">
-          <h2 class="section__title section__title--compact">Opening hours</h2>
-          <p class="status" data-status>Checking opening hours...</p>
-          <div class="hours__row"><span class="hours__day">Monday</span><span class="hours__time" data-day="1"></span></div>
-          <div class="hours__row"><span class="hours__day">Tuesday</span><span class="hours__time" data-day="2"></span></div>
-          <div class="hours__row"><span class="hours__day">Wednesday</span><span class="hours__time" data-day="3"></span></div>
-          <div class="hours__row"><span class="hours__day">Thursday</span><span class="hours__time" data-day="4"></span></div>
-          <div class="hours__row"><span class="hours__day">Friday</span><span class="hours__time" data-day="5"></span></div>
-          <div class="hours__row"><span class="hours__day">Saturday</span><span class="hours__time" data-day="6"></span></div>
-          <div class="hours__row"><span class="hours__day">Sunday</span><span class="hours__time" data-day="0"></span></div>
-          <p class="hours__note">All times are Chisinau time.</p>
-        </div>
-        <div class="contact" id="contact">
-          <h2 class="section__title section__title--compact">Contact</h2>
-          <ul class="contact__list">
-            <li class="contact__item"><span class="contact__label">Address</span><span class="contact__value">Stefan cel Mare Blvd 100, Chisinau</span></li>
-            <li class="contact__item"><span class="contact__label">Phone</span><a class="contact__link" href="tel:123456789">123456789</a></li>
-            <li class="contact__item"><span class="contact__label">Email</span><a class="contact__link" href="mailto:info@yourbarbershop.md">info@yourbarbershop.md</a></li>
-            <li class="contact__item"><span class="contact__label">Instagram</span><a class="contact__link" href="https://instagram.com/yourbarbershop" target="_blank" rel="noopener">@yourbarbershop</a></li>
-          </ul>
-          <div class="quick">
-            <a class="quick__link" href="tel:123456789">Call</a>
-            <a class="quick__link" href="https://wa.me/123456789" target="_blank" rel="noopener">WhatsApp</a>
-            <a class="quick__link" href="https://t.me/+123456789" target="_blank" rel="noopener">Telegram</a>
-          </div>
-          <a class="btn btn--primary contact__button" href="pages/booking.html">Book online</a>
-          <iframe class="contact__map" title="Map" src="https://www.google.com/maps?q=Stefan+cel+Mare+Blvd+100,+Chisinau&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="footer__inner">
-      <span>© Your Barbershop · <a class="footer__link" href="pages/privacy.html">Privacy</a></span>
-      <span>[INSTAGRAM] · [FACEBOOK]</span>
     </div>
-  </footer>
 
-  <div class="quick-bar">
-    <a class="quick-bar__link" href="tel:123456789">Call</a>
-    <a class="quick-bar__link" href="https://wa.me/123456789" target="_blank" rel="noopener">WhatsApp</a>
-    <a class="quick-bar__link" href="https://t.me/+123456789" target="_blank" rel="noopener">Telegram</a>
-  </div>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat__label">Venituri</div>
+        <div class="stat__value stat__value--income" data-js="income">+ 9 500 MDL</div>
+      </div>
+      <div class="stat">
+        <div class="stat__label">Cheltuieli</div>
+        <div class="stat__value stat__value--expense" data-js="expense">− 5 220 MDL</div>
+      </div>
+      <div class="stat">
+        <div class="stat__label">Cheltuit din venituri</div>
+        <div class="stat__value stat__value--accent" data-js="percent">55%</div>
+      </div>
+    </div>
 
-  <script src="assets/js/common.js"></script>
-  <script src="assets/js/header.js"></script>
-  <script src="assets/js/status.js"></script>
-  <script src="assets/js/services.js"></script>
+    <a class="button overview__cta" href="pages/detalii.html">Vezi toate detaliile →</a>
+  </main>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/script.js"></script>
 </body>
 </html>

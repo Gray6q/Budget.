@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buget – Tranzacții</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/tranzactii.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header__inner">
+      <a class="header__logo" href="../index.html">Buget<span class="header__dot">.</span></a>
+      <nav class="nav">
+        <a class="nav__link" href="../index.html">Acasă</a>
+        <a class="nav__link" href="detalii.html">Detalii</a>
+        <a class="nav__link nav__link--active" href="tranzactii.html">Tranzacții</a>
+        <a class="nav__link" href="detalii.html">Categorii</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-head">
+      <div>
+        <h1 class="page-head__title">Tranzacții</h1>
+        <p class="page-head__text">Adaugă și urmărește veniturile și cheltuielile tale.</p>
+      </div>
+      <div class="month-switch">
+        <button class="month-switch__button" type="button" data-js="prev" aria-label="Luna anterioară">‹</button>
+        <span class="month-switch__label" data-js="month">Octombrie 2026</span>
+        <button class="month-switch__button" type="button" data-js="next" aria-label="Luna următoare">›</button>
+      </div>
+    </div>
+
+    <div class="workspace">
+      <section class="workspace__form card" id="adauga">
+        <h2 class="form__title">Adaugă tranzacție</h2>
+        <form class="form" data-js="form" novalidate>
+          <div class="type-switch" role="radiogroup" aria-label="Tipul tranzacției">
+            <label class="type-switch__option">
+              <input class="type-switch__input" type="radio" name="type" value="expense" checked>
+              <span class="type-switch__label">Cheltuială</span>
+            </label>
+            <label class="type-switch__option">
+              <input class="type-switch__input" type="radio" name="type" value="income">
+              <span class="type-switch__label">Venit</span>
+            </label>
+          </div>
+
+          <div class="form__field">
+            <label class="form__label" for="title">Descriere</label>
+            <input class="form__input" id="title" name="title" type="text" maxlength="40" placeholder="De exemplu: Supermarket">
+          </div>
+
+          <div class="form__row">
+            <div class="form__field">
+              <label class="form__label" for="amount">Sumă (MDL)</label>
+              <input class="form__input" id="amount" name="amount" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0">
+            </div>
+            <div class="form__field">
+              <label class="form__label" for="date">Data</label>
+              <input class="form__input" id="date" name="date" type="date">
+            </div>
+          </div>
+
+          <div class="form__field">
+            <label class="form__label" for="category">Categorie</label>
+            <select class="form__input" id="category" name="category" data-js="category"></select>
+          </div>
+
+          <p class="form__message" data-js="form-message" role="status"></p>
+          <button class="button form__submit" type="submit">Adaugă</button>
+        </form>
+      </section>
+
+      <section class="workspace__list card transactions">
+        <div class="transactions__head">
+          <h2 class="transactions__title">Tranzacții din lună</h2>
+          <span class="workspace__count" data-js="count"></span>
+        </div>
+        <div class="workspace__totals">
+          <span class="workspace__total workspace__total--income" data-js="income"></span>
+          <span class="workspace__total workspace__total--expense" data-js="expense"></span>
+        </div>
+        <div data-js="list"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="container footer">Datele se salvează doar în acest browser.</footer>
+
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/tranzactii.js"></script>
+</body>
+</html>

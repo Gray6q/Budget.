@@ -1,0 +1,459 @@
+/* ===== Bază ===== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #0E1424;
+  color: #F3EFE6;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+.container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* ===== Header și meniu ===== */
+
+.header {
+  padding: 24px 0;
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.header__logo {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.header__dot {
+  color: #D4B26E;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.nav__link {
+  color: #A9B1C3;
+  transition: color 0.2s;
+}
+
+.nav__link:hover {
+  color: #F3EFE6;
+}
+
+.nav__link--active {
+  color: #F3EFE6;
+  font-weight: 700;
+}
+
+/* ===== Butoane și etichete ===== */
+
+.button {
+  display: inline-block;
+  padding: 18px 40px;
+  border-radius: 16px;
+  background: #D4B26E;
+  color: #0E1424;
+  font-size: 17px;
+  font-weight: 700;
+  transition: opacity 0.2s;
+}
+
+.button:hover {
+  opacity: 0.9;
+}
+
+.button--small {
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-size: 15px;
+}
+
+/* ===== Footer ===== */
+
+.footer {
+  padding-bottom: 40px;
+  font-size: 14px;
+  color: #A9B1C3;
+}
+
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 24px 0;
+}
+
+.page-head__title {
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.page-head__text {
+  margin-top: 4px;
+  color: #A9B1C3;
+}
+
+/* ===== Carduri ===== */
+
+.card {
+  padding: 28px;
+  background: #151D33;
+  border: 1px solid #243049;
+  border-radius: 24px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+
+.card--accent {
+  background: #D4B26E;
+  border-color: #D4B26E;
+  color: #0E1424;
+}
+
+.card__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #A9B1C3;
+}
+
+.card__label--on-accent {
+  color: #0E1424;
+  font-weight: 600;
+}
+
+.card__value {
+  margin: 6px 0;
+  font-size: 38px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.card__value--income {
+  color: #7FD1AE;
+}
+
+.card__value--expense {
+  color: #F0A58C;
+}
+
+.card__note {
+  font-size: 14px;
+  color: #A9B1C3;
+}
+
+.card__note--on-accent {
+  color: #0E1424;
+}
+
+/* ===== Tranzacții ===== */
+
+.transactions {
+  padding-bottom: 12px;
+  margin-bottom: 24px;
+}
+
+.transactions__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.transactions__title {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.transactions__link {
+  color: #D4B26E;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.transaction {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px 0;
+  border-top: 1px solid #243049;
+}
+
+.transaction__icon {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: #1F2A47;
+}
+
+.transaction__info {
+  flex: 1 1 180px;
+}
+
+.transaction__name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.transaction__date {
+  font-size: 13px;
+  color: #A9B1C3;
+}
+
+.transaction__tag {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: #1F2A47;
+  color: #A9B1C3;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.transaction__amount {
+  min-width: 110px;
+  text-align: right;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.transaction__amount--income {
+  color: #7FD1AE;
+}
+
+.transaction__amount--expense {
+  color: #F0A58C;
+}
+
+/* ===== Pagina Detalii ===== */
+
+.segmented {
+  display: flex;
+  gap: 8px;
+  padding: 4px;
+  background: #151D33;
+  border: 1px solid #243049;
+  border-radius: 999px;
+}
+
+.segmented__item {
+  padding: 8px 18px;
+  border-radius: 999px;
+  color: #A9B1C3;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.segmented__item--active {
+  background: #1F2A47;
+  color: #F3EFE6;
+  font-weight: 600;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.row__item {
+  flex: 1 1 300px;
+}
+
+.row__item--wide {
+  flex: 1.4 1 480px;
+}
+
+/* ===== Grafic ===== */
+
+.chart__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.chart__title {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.legend {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: #A9B1C3;
+}
+
+.legend__dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 6px;
+  border-radius: 3px;
+}
+
+.legend__dot--income {
+  background: #7FD1AE;
+}
+
+.legend__dot--expense {
+  background: #F0A58C;
+}
+
+.chart__bars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  height: 200px;
+  border-bottom: 1px solid #243049;
+}
+
+.chart__group {
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+}
+
+.chart__bar {
+  width: 20px;
+  border-radius: 8px 8px 0 0;
+}
+
+.chart__bar--income {
+  background: #7FD1AE;
+}
+
+.chart__bar--expense {
+  background: #F0A58C;
+}
+
+.chart__months {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 10px;
+  font-size: 13px;
+  color: #A9B1C3;
+}
+
+.chart__month {
+  flex: 1;
+  text-align: center;
+}
+
+/* ===== Categorii ===== */
+
+.categories__title {
+  margin-bottom: 24px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.category {
+  margin-bottom: 20px;
+}
+
+.category__row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.category__track {
+  height: 10px;
+  background: #243049;
+  border-radius: 999px;
+}
+
+.category__fill {
+  height: 10px;
+  background: #D4B26E;
+  border-radius: 999px;
+}
+
+.categories__note {
+  font-size: 13px;
+  color: #A9B1C3;
+}
+
+/* ----- Butonul de ștergere din rândul tranzacției ----- */
+
+.transaction__delete {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #A9B1C3;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.transaction__delete:hover {
+  background: #1F2A47;
+  color: #F0A58C;
+}
+
+.transaction__delete:focus-visible {
+  outline: 2px solid #D4B26E;
+}
+
+/* ===== Ecrane mici ===== */
+
+@media (max-width: 640px) {
+  .container {
+    padding: 0 20px;
+  }
+
+  .page-head__title {
+    font-size: 32px;
+  }
+}
