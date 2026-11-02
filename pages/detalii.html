@@ -17,7 +17,9 @@
         <a class="nav__link" href="../index.html">Acasă</a>
         <a class="nav__link nav__link--active" href="detalii.html">Detalii</a>
         <a class="nav__link" href="tranzactii.html">Tranzacții</a>
-        <a class="nav__link" href="detalii.html">Categorii</a>
+        <a class="nav__link" href="detalii.html#categorii">Categorii</a>
+        <a class="nav__link" href="date.html">Date</a>
+        <a class="nav__link" href="date.html">Date</a>
       </nav>
       <a class="button button--small" href="tranzactii.html#adauga">+ Adaugă tranzacție</a>
     </div>
@@ -26,18 +28,16 @@
   <main class="container">
     <div class="page-head">
       <div>
-        <h1 class="page-head__title" data-js="month"></h1>
-        <p class="page-head__text">Toate detaliile despre banii tăi luna aceasta.</p>
-      </div>
-      <div class="segmented">
-        <a class="segmented__item segmented__item--active" href="#">Luna</a>
-        <a class="segmented__item" href="#">Anul</a>
+        <h1 class="page-head__title" data-js="label"></h1>
+        <p class="page-head__text">Toate detaliile despre banii tăi, pe perioada aleasă.</p>
       </div>
     </div>
 
+    <div class="period" data-js="period"></div>
+
     <section class="row">
       <div class="row__item card card--accent">
-        <div class="card__label card__label--on-accent">Sold curent</div>
+        <div class="card__label card__label--on-accent">Sold</div>
         <div class="card__value" data-js="balance"></div>
         <div class="card__note card__note--on-accent" data-js="balance-note"></div>
       </div>
@@ -66,7 +66,7 @@
         <div class="chart__months" data-js="chart-months"></div>
       </div>
 
-      <div class="row__item card categories">
+      <div class="row__item card categories" id="categorii">
         <h2 class="categories__title">Pe categorii</h2>
         <div data-js="categories"></div>
         <p class="categories__note">Barele arată ponderea fiecărei categorii din cheltuieli.</p>

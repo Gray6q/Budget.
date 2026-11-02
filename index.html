@@ -17,14 +17,17 @@
         <a class="nav__link nav__link--active" href="index.html">Acasă</a>
         <a class="nav__link" href="pages/detalii.html">Detalii</a>
         <a class="nav__link" href="pages/tranzactii.html">Tranzacții</a>
-        <a class="nav__link" href="pages/detalii.html">Categorii</a>
+        <a class="nav__link" href="pages/detalii.html#categorii">Categorii</a>
+        <a class="nav__link" href="pages/date.html">Date</a>
+        <a class="nav__link" href="pages/date.html">Date</a>
       </nav>
     </div>
   </header>
 
   <main class="overview">
     <h1 class="visually-hidden">Prezentare generală</h1>
-    <span class="chip" data-js="month"></span>
+    <span class="chip" data-js="label"></span>
+    <div class="period overview__period" data-js="period"></div>
 
     <div class="ring">
       <svg class="ring__svg" data-js="ring" viewBox="0 0 300 300" role="img" aria-label="Cheltuit din venituri">
@@ -32,7 +35,7 @@
         <circle class="ring__value" data-js="ring-value" cx="150" cy="150" r="120" stroke-dasharray="0 754"/>
       </svg>
       <div class="ring__center">
-        <span class="ring__label">Sold curent</span>
+        <span class="ring__label">Sold</span>
         <span class="ring__amount" data-js="balance"></span>
         <span class="ring__currency">MDL</span>
       </div>

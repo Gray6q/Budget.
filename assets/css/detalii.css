@@ -263,29 +263,6 @@ p {
 
 /* ===== Pagina Detalii ===== */
 
-.segmented {
-  display: flex;
-  gap: 8px;
-  padding: 4px;
-  background: #151D33;
-  border: 1px solid #243049;
-  border-radius: 999px;
-}
-
-.segmented__item {
-  padding: 8px 18px;
-  border-radius: 999px;
-  color: #A9B1C3;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.segmented__item--active {
-  background: #1F2A47;
-  color: #F3EFE6;
-  font-weight: 600;
-}
-
 .row {
   display: flex;
   flex-wrap: wrap;
@@ -358,7 +335,9 @@ p {
 }
 
 .chart__bar {
-  width: 20px;
+  flex: 1;
+  max-width: 20px;
+  min-width: 3px;
   border-radius: 8px 8px 0 0;
 }
 
@@ -462,4 +441,99 @@ p {
 .transactions__empty {
   padding: 8px 0 16px;
   color: #A9B1C3;
+}
+
+/* ===== Perioada afișată ===== */
+.period {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.period__options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.period__option {
+  padding: 8px 18px;
+  background: #151D33;
+  border: 1px solid #243049;
+  border-radius: 999px;
+  color: #A9B1C3;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.period__option:hover {
+  color: #F3EFE6;
+}
+
+.period__option:focus-visible {
+  outline: 2px solid #F3EFE6;
+  outline-offset: 2px;
+}
+
+.period__option--active {
+  background: #D4B26E;
+  border-color: #D4B26E;
+  color: #0E1424;
+  font-weight: 700;
+}
+
+.period__custom {
+  display: none;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 16px;
+  width: 100%;
+  max-width: 420px;
+}
+
+.period__custom--open {
+  display: flex;
+}
+
+.period__field {
+  flex: 1 1 150px;
+  text-align: left;
+}
+
+.period__label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #A9B1C3;
+}
+
+.period__input {
+  width: 100%;
+  padding: 10px 14px;
+  background: #0E1424;
+  border: 1px solid #243049;
+  border-radius: 12px;
+  color: #F3EFE6;
+  color-scheme: dark;
+  font-family: inherit;
+  font-size: 15px;
+}
+
+.period__input:focus {
+  outline: 2px solid #D4B26E;
+  outline-offset: 1px;
+  border-color: #D4B26E;
+}
+
+.period__text {
+  font-size: 13px;
+  color: #A9B1C3;
+  text-align: left;
 }

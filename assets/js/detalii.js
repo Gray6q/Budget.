@@ -1,36 +1,50 @@
 /* ===== Pagina Detalii ===== */
 
 const CHART_MAX_HEIGHT = 180;
+const CHART_MAX_LABELS = 12;
 const RECENT_COUNT = 5;
 
-function renderSummary(current, summary, previousSummary) {
-  const difference = summary.balance - previousSummary.balance;
-  const direction = difference >= 0 ? 'mai mult' : 'mai puțin';
+function renderSummary(range, current, summary, all) {
+  const previousRange = getPreviousRange(range);
   const incomeCount = current.filter(function (transaction) {
     return transaction.type === 'income';
   }).length;
+  let note = 'Din prima tranzacție până azi';
 
-  setText('month', getMonthLabel(new Date()));
+  if (previousRange) {
+    const previous = filterByRange(all, previousRange);
+    const name = range.kind === 'months' && range.months === 1 ? 'luna trecută' : 'perioada anterioară';
+
+    if (previous.length === 0) {
+      note = 'Nu există date pentru ' + name;
+    } else {
+      const difference = summary.balance - getSummary(previous).balance;
+      note = 'Cu ' + formatMoney(Math.abs(difference)) + ' MDL ' + (difference >= 0 ? 'mai mult' : 'mai puțin') + ' decât ' + name;
+    }
+  }
+
+  setText('label', getPeriodLabel(range));
   setText('balance', formatMoney(summary.balance) + ' MDL');
-  setText('balance-note', 'Cu ' + formatMoney(Math.abs(difference)) + ' MDL ' + direction + ' decât luna trecută');
+  setText('balance-note', note);
   setText('income', '+ ' + formatMoney(summary.income) + ' MDL');
   setText('income-note', incomeCount === 1 ? '1 tranzacție de venit' : incomeCount + ' tranzacții de venit');
   setText('expense', '− ' + formatMoney(summary.expense) + ' MDL');
   setText('expense-note', summary.spentPercent + '% din venituri');
 }
 
-function renderChart(all) {
-  const series = getMonthlySeries(all, 6);
+function renderChart(current, range) {
+  const buckets = getChartBuckets(current, range);
   const bars = getContainer('chart-bars');
   const months = getContainer('chart-months');
-  const maxValue = Math.max(1, ...series.map(function (item) {
+  const step = Math.ceil(buckets.length / CHART_MAX_LABELS);
+  const maxValue = Math.max(1, ...buckets.map(function (item) {
     return Math.max(item.income, item.expense);
   }));
 
   bars.innerHTML = '';
   months.innerHTML = '';
 
-  series.forEach(function (item) {
+  buckets.forEach(function (item, index) {
     const group = createElement('div', 'chart__group');
     const income = createElement('div', 'chart__bar chart__bar--income');
     const expense = createElement('div', 'chart__bar chart__bar--expense');
@@ -40,17 +54,18 @@ function renderChart(all) {
 
     group.append(income, expense);
     bars.append(group);
-    months.append(createElement('span', 'chart__month', item.label));
+    months.append(createElement('span', 'chart__month', index % step === 0 ? item.label : ''));
   });
 }
 
 function renderCategories(current, summary) {
   const container = getContainer('categories');
   const totals = getCategoryTotals(current);
+
   container.innerHTML = '';
 
   if (totals.length === 0) {
-    container.append(createElement('p', 'categories__empty', 'Nu ai cheltuieli în această lună.'));
+    container.append(createElement('p', 'categories__empty', 'Nu ai cheltuieli în această perioadă.'));
   }
 
   totals.forEach(function (category) {
@@ -77,14 +92,14 @@ function renderTransactions(current) {
   const latest = current
     .slice()
     .sort(function (a, b) {
-      return b.date.localeCompare(a.date);
+      return b.date.localeCompare(a.date) || b.id - a.id;
     })
     .slice(0, RECENT_COUNT);
 
   container.innerHTML = '';
 
   if (latest.length === 0) {
-    container.append(createElement('p', 'transactions__empty', 'Nu ai tranzacții în această lună.'));
+    container.append(createElement('p', 'transactions__empty', 'Nu ai tranzacții în această perioadă.'));
   }
 
   latest.forEach(function (transaction) {
@@ -93,17 +108,16 @@ function renderTransactions(current) {
 }
 
 function renderDetails() {
-  const now = new Date();
-  const previousMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
   const all = loadTransactions();
-  const current = getMonthTransactions(all, now.getFullYear(), now.getMonth());
+  const range = getPeriodRange(loadPeriod(), all);
+  const current = filterByRange(all, range);
   const summary = getSummary(current);
-  const previousSummary = getSummary(getMonthTransactions(all, previousMonth.getFullYear(), previousMonth.getMonth()));
 
-  renderSummary(current, summary, previousSummary);
-  renderChart(all);
+  renderSummary(range, current, summary, all);
+  renderChart(current, range);
   renderCategories(current, summary);
   renderTransactions(current);
 }
 
+initPeriodPicker(getContainer('period'), renderDetails);
 renderDetails();

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buget – Import și export</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/date.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header__inner">
+      <a class="header__logo" href="../index.html">Buget<span class="header__dot">.</span></a>
+      <nav class="nav">
+        <a class="nav__link" href="../index.html">Acasă</a>
+        <a class="nav__link" href="detalii.html">Detalii</a>
+        <a class="nav__link" href="tranzactii.html">Tranzacții</a>
+        <a class="nav__link" href="detalii.html#categorii">Categorii</a>
+        <a class="nav__link nav__link--active" href="date.html">Date</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-head">
+      <div>
+        <h1 class="page-head__title">Import și export</h1>
+        <p class="page-head__text">Salvează o copie a datelor sau adu tranzacții din extrasul băncii.</p>
+      </div>
+    </div>
+
+    <section class="row">
+      <div class="row__item card transfer">
+        <h2 class="transfer__title">Export</h2>
+        <p class="transfer__text">Descarcă toate tranzacțiile. Copia JSON se poate restaura aici oricând, iar CSV-ul se deschide în Excel sau Google Sheets.</p>
+        <div class="transfer__actions">
+          <button class="button transfer__button" type="button" data-js="export-json">Copie de siguranță (JSON)</button>
+          <button class="button button--outline transfer__button" type="button" data-js="export-csv">Export CSV</button>
+        </div>
+        <p class="note" data-js="export-note" role="status"></p>
+      </div>
+
+      <div class="row__item card transfer">
+        <h2 class="transfer__title">Restaurare din copie</h2>
+        <p class="transfer__text">Alege un fișier JSON creat de aplicație. Poți adăuga tranzacțiile la ce ai deja sau poți înlocui tot.</p>
+        <input class="transfer__file" type="file" accept=".json,application/json" aria-label="Fișier de copie (JSON)" data-js="restore-file">
+        <p class="note" data-js="restore-info" role="status"></p>
+        <div class="transfer__actions" data-js="restore-actions" hidden>
+          <button class="button transfer__button" type="button" data-js="restore-merge">Adaugă la ce am</button>
+          <button class="button button--outline transfer__button" type="button" data-js="restore-replace">Înlocuiește tot</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card import">
+      <h2 class="transfer__title">Import din extras bancar</h2>
+      <p class="transfer__text">Alege un extras în format CSV sau fișierul HTML primit pe e-mail. Fișierul se citește doar în browser și nu pleacă nicăieri. Păstrez numai data, descrierea și suma, restul se ignoră.</p>
+      <input class="transfer__file" type="file" accept=".csv,.txt,.html,.htm,text/csv,text/html" aria-label="Extras bancar" data-js="import-file">
+      <p class="note" data-js="import-message" role="status"></p>
+
+      <div class="import__setup" data-js="import-setup" hidden>
+        <h3 class="import__subtitle">1. Spune-mi ce conține fiecare coloană</h3>
+        <div class="mapping" data-js="mapping"></div>
+        <div class="options">
+          <label class="option">
+            <input class="option__input" type="checkbox" data-js="opt-header">
+            <span class="option__text">Primul rând conține titlurile coloanelor</span>
+          </label>
+          <label class="option">
+            <input class="option__input" type="checkbox" data-js="opt-invert">
+            <span class="option__text">Inversează semnele (dacă cheltuielile apar ca pozitive)</span>
+          </label>
+          <label class="option">
+            <input class="option__input" type="checkbox" data-js="opt-month-first">
+            <span class="option__text">Datele sunt scrise lună/zi/an</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="import__preview" data-js="import-preview" hidden>
+        <h3 class="import__subtitle">2. Verifică și importă</h3>
+        <p class="import__summary" data-js="import-summary"></p>
+        <div class="import__scroll">
+          <table class="preview">
+            <thead>
+              <tr>
+                <th class="preview__cell preview__cell--head">Import</th>
+                <th class="preview__cell preview__cell--head">Data</th>
+                <th class="preview__cell preview__cell--head">Descriere</th>
+                <th class="preview__cell preview__cell--head">Categorie</th>
+                <th class="preview__cell preview__cell--head preview__cell--amount">Sumă</th>
+              </tr>
+            </thead>
+            <tbody data-js="preview-body"></tbody>
+          </table>
+        </div>
+        <button class="button import__run" type="button" data-js="import-run">Importă</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="container footer">Datele se salvează doar în acest browser.</footer>
+
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/date.js"></script>
+</body>
+</html>

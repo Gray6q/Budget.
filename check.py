@@ -30,10 +30,10 @@ def read(path):
         return f.read()
 
 
-PAGES = ['index.html', 'pages/detalii.html', 'pages/tranzactii.html']
+PAGES = ['index.html', 'pages/detalii.html', 'pages/tranzactii.html', 'pages/date.html']
 EXPECTED = PAGES + [
-    'assets/css/style.css', 'assets/css/detalii.css', 'assets/css/tranzactii.css',
-    'assets/js/data.js', 'assets/js/script.js', 'assets/js/detalii.js', 'assets/js/tranzactii.js',
+    'assets/css/style.css', 'assets/css/detalii.css', 'assets/css/tranzactii.css', 'assets/css/date.css',
+    'assets/js/data.js', 'assets/js/script.js', 'assets/js/detalii.js', 'assets/js/tranzactii.js', 'assets/js/date.js',
 ]
 
 
@@ -98,7 +98,7 @@ for page in PAGES:
         if not os.path.isfile(js):
             continue
         code = read(js)
-        used |= set(re.findall(r"(?:setText|getContainer)\('([^']+)'", code))
+        used |= set(re.findall(r"(?:setText|getContainer|setNote)\('([^']+)'", code))
         used |= set(re.findall(r'\[data-js="([a-z-]+)"\]', code))
     lipsa = sorted(used - html_hooks)
     extra = sorted(html_hooks - used)
@@ -146,11 +146,28 @@ def has_rule(name, css):
     return name in css or any(c.startswith(name + '__') or c.startswith(name + '--') for c in css)
 
 
-def page_js(page):
-    files = js_of(page)
-    own = [f for f in files if not f.endswith('data.js')]
-    code = ''.join(read(f) for f in own if os.path.isfile(f))
-    return files if 'createTransactionRow' in code else own
+def page_js_code(page):
+    """Codul paginii, plus funcțiile din data.js pe care le apelează."""
+    own = ''.join(read(f) for f in js_of(page) if not f.endswith('data.js') and os.path.isfile(f))
+    data = read('assets/js/data.js') if os.path.isfile('assets/js/data.js') else ''
+    chunks = {m.group(1): m.group(0) for m in re.finditer(r'^function (\w+)\(.*?^}', data, flags=re.S | re.M)}
+    code, added, changed = own, set(), True
+    while changed:
+        changed = False
+        for name, body in chunks.items():
+            if name not in added and re.search(r'\b' + name + r'\(', code):
+                code += '\n' + body
+                added.add(name)
+                changed = True
+    return code
+
+
+def classes_in_code(code):
+    names = set(re.findall(r"\b[a-z][a-z0-9]*(?:-[a-z0-9]+)*__[a-z0-9]+(?:-[a-z0-9]+)*(?:--[a-z0-9]+(?:-[a-z0-9]+)*)?\b", code))
+    for value in re.findall(r"createElement\('[a-z0-9]+',\s*'([^']*)'", code):
+        names |= set(value.split())
+    names |= set(re.findall(r"classList\.(?:add|remove|toggle)\('([\w-]+)'", code))
+    return names
 
 
 used_everywhere = set()
@@ -158,7 +175,7 @@ for page in PAGES:
     if not os.path.isfile(page):
         continue
     css = css_classes(css_of(page))
-    used = html_classes(page) | js_classes(page_js(page))
+    used = html_classes(page) | classes_in_code(page_js_code(page))
     used_everywhere |= used
     fara_stil = sorted(c for c in used if not has_rule(c, css))
     for name in fara_stil:
@@ -221,10 +238,22 @@ check('luna trecută e goală', getMonthTransactions(all, lastMonth.getFullYear(
 check('format 4280', formatMoney(4280), '4\u00A0280');
 check('format 1500.5', formatMoney(1500.5), '1\u00A0500,50');
 check('format 0', formatMoney(0), '0');
-const series = getMonthlySeries(all, 6);
-check('grafic: 6 luni', series.length, 6);
-check('grafic: ultima lună = cheltuielile curente', series[5].expense, 742.5);
-check('grafic: prima lună e goală', series[0].expense, 0);
+const range1 = getPeriodRange({ preset: '1m' }, all);
+const range6 = getPeriodRange({ preset: '6m' }, all);
+const swapped = getPeriodRange({ preset: 'custom', from: '2026-12-31', to: '2026-01-01' }, all);
+check('perioadă 1 lună: cele 3 tranzacții', filterByRange(all, range1).length, 3);
+check('perioadă 6 luni: începe cu 5 luni în urmă', range6.from, dateToString(new Date(year, month - 5, 1)));
+check('perioadă "tot": începe cu prima tranzacție', getPeriodRange({ preset: 'all' }, all).from, todayString());
+check('perioadă personalizată: datele inversate se corectează', [swapped.from, swapped.to], ['2026-01-01', '2026-12-31']);
+check('perioadă anterioară: se termină înainte de luna curentă', getPreviousRange(range1).to, dateToString(new Date(year, month, 0)));
+check('perioadă "tot": fără perioadă anterioară', getPreviousRange(getPeriodRange({ preset: 'all' }, all)), null);
+const weeks = getChartBuckets(filterByRange(all, range1), range1);
+const months = getChartBuckets(filterByRange(all, range6), range6);
+check('grafic 1 lună: 4-5 săptămâni', weeks.length === 4 || weeks.length === 5, true);
+check('grafic 6 luni: 6 coloane', months.length, 6);
+check('grafic: ultima coloană = cheltuielile curente', months[5].expense, 742.5);
+check('grafic: prima coloană e goală', months[0].expense, 0);
+check('suma pe săptămâni = total cheltuieli', weeks.reduce(function (a, b) { return a + b.expense; }, 0), 742.5);
 const cats = getCategoryTotals(current);
 check('categorii: suma = cheltuieli', cats.reduce(function (a, c) { return a + c.total; }, 0), 742.5);
 check('categorii: sortate descrescător', cats.every(function (c, i) { return i === 0 || cats[i - 1].total >= c.total; }), true);
@@ -232,11 +261,39 @@ check('salvat în localStorage', JSON.parse(__store[STORAGE_KEY]).length, 3);
 removeTransaction(all.find(function (t) { return t.title === 'Benzină'; }).id);
 check('după ștergere: cheltuieli', getSummary(getMonthTransactions(loadTransactions(), year, month)).expense, 342.5);
 check('după ștergere: 2 tranzacții', loadTransactions().length, 2);
+replaceTransactions([]);
+check('suma 1 234,56', parseAmount('1 234,56'), 1234.56);
+check('suma 1.234,56', parseAmount('1.234,56'), 1234.56);
+check('suma 1,234.56', parseAmount('1,234.56'), 1234.56);
+check('suma (50,00)', parseAmount('(50,00)'), -50);
+check('suma text', parseAmount('abc'), null);
+check('data 15.10.2026', parseDate('15.10.2026', false), '2026-10-15');
+check('data inexistentă', parseDate('31.02.2026', false), null);
+check('data lună/zi/an', parseDate('10/15/2026', true), '2026-10-15');
+const impRows = parseCsv('Data;Descriere;Suma\r\n15.10.2026;"Linella; Chisinau";-123,45\r\n16.10.2026;Salariu;8000,00\r\n');
+check('csv: ghilimele și ;', impRows[1][1], 'Linella; Chisinau');
+const impMap = guessMapping(impRows, true);
+check('mapare după titluri', impMap, { date: 0, description: 1, amount: 2, credit: -1 });
+const impItems = buildItems(impRows, { hasHeader: true, mapping: impMap, monthFirst: false, invert: false }).items;
+check('import: tip și categorie', [impItems[0].type, impItems[0].category, impItems[1].type], ['expense', 'Alimente', 'income']);
+const impCredit = parseCsv('Data;Detalii;Debit;Credit\n15.10.2026;Moldcell;250,00;\n16.10.2026;Salariu;;8000,00\n');
+const impCreditMap = guessMapping(impCredit, true);
+check('mapare debit/credit', impCreditMap, { date: 0, description: 1, amount: 2, credit: 3 });
+check('debit/credit: tipuri', buildItems(impCredit, { hasHeader: true, mapping: impCreditMap, monthFirst: false, invert: false }).items.map(function (i) { return i.type; }), ['expense', 'income']);
+check('categorie ghicită', guessCategory('Bolt ride', 'expense'), 'Transport');
+check('curățare: categorie necunoscută', cleanTransaction({ date: '2026-10-15', title: 'x', amount: 5, type: 'expense', category: 'Zzz' }).category, 'Altele');
+check('curățare: dată falsă', cleanTransaction({ date: '2026-02-31', title: 'x', amount: 5, type: 'expense' }), null);
+addTransactions([{ date: '2026-10-15', title: 'A', category: 'Alimente', type: 'expense', amount: 10 }]);
+check('duplicate: doar primul acoperit', findDuplicates([{ date: '2026-10-15', type: 'expense', amount: 10 }, { date: '2026-10-15', type: 'expense', amount: 10 }]), [true, false]);
+const impBack = parseCsv(getCsvText().replace(/^\uFEFF/, ''));
+const impBackItem = buildItems(impBack, { hasHeader: true, mapping: guessMapping(impBack, true), monthFirst: false, invert: false }).items[0];
+check('export CSV se poate importa înapoi', [impBackItem.date, impBackItem.type, impBackItem.amount], ['2026-10-15', 'expense', 10]);
+check('csv: formulele sunt neutralizate', csvCell('=SUM(A1)'), "'=SUM(A1)");
 process.exit(__failed ? 1 : 0);
 """
     if os.path.isfile('assets/js/data.js'):
         with tempfile.NamedTemporaryFile('w', suffix='.js', delete=False, encoding='utf-8') as tmp:
-            tmp.write(STUB + read('assets/js/data.js') + TESTS)
+            tmp.write(STUB + read('assets/js/data.js') + read('assets/js/date.js').split('/* ===== Interfața ===== */')[0] + TESTS)
         result = subprocess.run([node, tmp.name], capture_output=True, text=True, encoding='utf-8')
         os.unlink(tmp.name)
         print(result.stdout, end='')
@@ -294,7 +351,7 @@ else:
             bad('pages/detalii.html nu s-a putut încărca')
         else:
             expect('Detalii: luna curentă', eticheta in dom)
-            expect('Detalii: 12 bare în grafic', dom.count('chart__bar chart__bar--') == 12)
+            expect('Detalii: bare în grafic (4-5 săptămâni)', dom.count('chart__bar chart__bar--') in (8, 10))
             expect('Detalii: mesaj gol la categorii', 'categories__empty' in dom)
             expect('Detalii: mesaj gol la tranzacții', 'transactions__empty' in dom)
 
@@ -305,6 +362,14 @@ else:
             expect('Tranzacții: luna curentă', eticheta in dom)
             expect('Tranzacții: mesaj listă goală', 'workspace__empty' in dom)
             expect('Tranzacții: 5 categorii în formular', dom.count('<option') == 5)
+
+        dom = dump('pages/date.html')
+        if not dom.strip():
+            bad('pages/date.html nu s-a putut încărca')
+        else:
+            expect('Date: butoanele de export', 'data-js="export-json"' in dom and 'data-js="export-csv"' in dom)
+            expect('Date: 4 liste de coloane construite de JS', dom.count('class="mapping__select"') == 4)
+            expect('Date: previzualizarea e ascunsă', bool(re.search(r'data-js="import-preview"[^>]*hidden', dom)))
     finally:
         server.terminate()
 
